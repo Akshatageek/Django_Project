@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block title %}Login - BlogHub{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center mb-5">
+        <div class="col-md-5">
+            <div class="card" style="border: none; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+                <div class="card-body p-4">
+                    <h2 class="card-title text-center mb-4" style="font-weight: 700; color: #2d3748;">
+                        <i class="fas fa-sign-in-alt"></i> Welcome Back
+                    </h2>
+
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger" role="alert">
+                            {% for error in form.non_field_errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <!-- Username Field -->
+                        <div class="mb-3">
+                            <label for="{{ form.username.id_for_label }}" class="form-label">
+                                <i class="fas fa-user"></i> Username
+                            </label>
+                            {{ form.username }}
+                            {% if form.username.errors %}
+                                <div class="form-text text-danger">
+                                    {% for error in form.username.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Password Field -->
+                        <div class="mb-3">
+                            <label for="{{ form.password.id_for_label }}" class="form-label">
+                                <i class="fas fa-lock"></i> Password
+                            </label>
+                            {{ form.password }}
+                            {% if form.password.errors %}
+                                <div class="form-text text-danger">
+                                    {% for error in form.password.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Remember Me -->
+                        <div class="mb-4 form-check">
+                            <input type="checkbox" class="form-check-input" id="id_remember" name="remember" style="cursor: pointer;">
+                            <label class="form-check-label" for="id_remember" style="cursor: pointer;">
+                                Remember me
+                            </label>
+                            <a href="#" class="float-end" style="color: #667eea; font-size: 0.9rem; text-decoration: none;">
+                                Forgot Password?
+                            </a>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn btn-primary w-100 py-2" style="font-weight: 600;">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </button>
+                    </form>
+
+                    <hr class="my-4">
+
+                    <p class="text-center mb-0" style="color: #718096;">
+                        Don't have an account? <a href="{% url 'signup' %}" style="color: #667eea; font-weight: 600; text-decoration: none;">
+                            <i class="fas fa-user-plus"></i> Sign up here
+                        </a>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Info Box -->
+            <div class="alert alert-info mt-4" style="border-radius: 12px;">
+                <h6 style="font-weight: 600; margin-bottom: 0.5rem;">
+                    <i class="fas fa-info-circle"></i> Demo Credentials
+                </h6>
+                <small>
+                    Use your account credentials to login. If you don't have an account yet, please sign up first.
+                </small>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_css %}
+    <style>
+        input[type="text"],
+        input[type="password"] {
+            width: 100% !important;
+        }
+    </style>
+{% endblock %}

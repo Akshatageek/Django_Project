@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Post - BlogHub{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-8">
+            <div class="card" style="border: none; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+                <div class="card-body p-4">
+                    <h2 class="card-title mb-4" style="font-weight: 700; color: #2d3748;">
+                        <i class="fas fa-pen-fancy"></i> Create New Post
+                    </h2>
+
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger" role="alert">
+                            {% for error in form.non_field_errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <!-- Title Field -->
+                        <div class="mb-4">
+                            <label for="{{ form.title.id_for_label }}" class="form-label">
+                                <i class="fas fa-heading"></i> Post Title
+                            </label>
+                            {{ form.title }}
+                            <small class="form-text text-muted">
+                                Give your post a compelling title (max 200 characters)
+                            </small>
+                            {% if form.title.errors %}
+                                <div class="form-text text-danger d-block">
+                                    {% for error in form.title.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Content Field -->
+                        <div class="mb-4">
+                            <label for="{{ form.content.id_for_label }}" class="form-label">
+                                <i class="fas fa-file-alt"></i> Content
+                            </label>
+                            {{ form.content }}
+                            <small class="form-text text-muted">
+                                Write your blog post content here. You can use line breaks and formatting.
+                            </small>
+                            {% if form.content.errors %}
+                                <div class="form-text text-danger d-block">
+                                    {% for error in form.content.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Image Field -->
+                        <div class="mb-4">
+                            <label for="{{ form.image.id_for_label }}" class="form-label">
+                                <i class="fas fa-image"></i> Featured Image (Optional)
+                            </label>
+                            <div class="input-group">
+                                <input type="file" class="form-control" id="{{ form.image.id_for_label }}" name="image" accept="image/*">
+                            </div>
+                            <small class="form-text text-muted">
+                                Supported formats: JPG, PNG, GIF (Max 5MB). Leave empty to use default placeholder.
+                            </small>
+                            {% if form.image.errors %}
+                                <div class="form-text text-danger d-block">
+                                    {% for error in form.image.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Image Preview -->
+                        <div id="imagePreview" class="mb-4" style="display: none;">
+                            <label class="form-label">Image Preview</label>
+                            <img id="previewImg" src="" alt="Preview" style="max-width: 100%; max-height: 300px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+                        </div>
+
+                        <!-- Submit Buttons -->
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'home' %}" class="btn btn-secondary" style="min-width: 120px;">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary" style="min-width: 120px;">
+                                <i class="fas fa-check"></i> Publish Post
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Tips Section -->
+            <div class="row mt-5">
+                <div class="col-md-6 mb-3 mb-md-0">
+                    <div class="card" style="border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);">
+                        <div class="card-body">
+                            <h6 style="font-weight: 700; color: #2d3748; margin-bottom: 1rem;">
+                                <i class="fas fa-lightbulb"></i> Writing Tips
+                            </h6>
+                            <ul style="font-size: 0.9rem; color: #718096; list-style: none; padding: 0;">
+                                <li><i class="fas fa-check" style="color: #48bb78;"></i> &nbsp;Use clear, compelling titles</li>
+                                <li><i class="fas fa-check" style="color: #48bb78;"></i> &nbsp;Break content into paragraphs</li>
+                                <li><i class="fas fa-check" style="color: #48bb78;"></i> &nbsp;Add featured images</li>
+                                <li><i class="fas fa-check" style="color: #48bb78;"></i> &nbsp;Proofread before publishing</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card" style="border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);">
+                        <div class="card-body">
+                            <h6 style="font-weight: 700; color: #2d3748; margin-bottom: 1rem;">
+                                <i class="fas fa-info-circle"></i> Image Guidelines
+                            </h6>
+                            <ul style="font-size: 0.9rem; color: #718096; list-style: none; padding: 0;">
+                                <li><i class="fas fa-image"></i> &nbsp;Recommended size: 1200x630px</li>
+                                <li><i class="fas fa-check"></i> &nbsp;Max file size: 5MB</li>
+                                <li><i class="fas fa-check"></i> &nbsp;Formats: JPG, PNG, GIF</li>
+                                <li><i class="fas fa-check"></i> &nbsp;High quality images</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_css %}
+    <style>
+        textarea, input[type="text"], input[type="file"] {
+            width: 100% !important;
+        }
+
+        textarea {
+            min-height: 300px;
+            resize: vertical;
+        }
+    </style>
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+        document.getElementById('{{ form.image.id_for_label }}').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    document.getElementById('previewImg').src = event.target.result;
+                    document.getElementById('imagePreview').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+{% endblock %}

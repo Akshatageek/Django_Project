@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ post.title }} - BlogHub{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Back Button -->
+            <a href="{% url 'home' %}" class="btn btn-outline-secondary mb-4" style="border-radius: 8px;">
+                <i class="fas fa-arrow-left"></i> Back to Posts
+            </a>
+
+            <!-- Post Detail Card -->
+            <div class="card" style="border: none; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+                <!-- Post Image -->
+                {% if post.image %}
+                    <img src="{{ post.image.url }}" alt="{{ post.title }}" class="card-img-top" style="height: 400px; object-fit: cover;">
+                {% else %}
+                    <div style="height: 400px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 4rem;">
+                        <i class="fas fa-image"></i>
+                    </div>
+                {% endif %}
+
+                <div class="card-body p-4">
+                    <!-- Title -->
+                    <h1 class="mb-3" style="font-weight: 700; color: #2d3748; line-height: 1.4;">
+                        {{ post.title }}
+                    </h1>
+
+                    <!-- Author and Date -->
+                    <div class="mb-4 pb-4" style="border-bottom: 2px solid #e2e8f0;">
+                        <div class="row align-items-center">
+                            <div class="col-md-6">
+                                <p class="mb-2" style="color: #718096;">
+                                    <i class="fas fa-user-circle" style="color: #667eea;"></i>
+                                    <strong>{{ post.author.username }}</strong>
+                                </p>
+                                <p class="mb-0" style="color: #a0aec0; font-size: 0.9rem;">
+                                    <i class="fas fa-calendar-alt"></i> {{ post.created_at|date:"F d, Y \a\t g:i A" }}
+                                </p>
+                            </div>
+                            <div class="col-md-6 text-md-end mt-3 mt-md-0">
+                                {% if user.is_authenticated and user == post.author %}
+                                    <a href="#" class="btn btn-sm btn-warning" style="border-radius: 8px;">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                    <a href="#" class="btn btn-sm btn-danger" style="border-radius: 8px;">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Post Content -->
+                    <div class="post-content" style="font-size: 1.05rem; line-height: 1.8; color: #4a5568; white-space: pre-wrap; word-wrap: break-word;">
+                        {{ post.content }}
+                    </div>
+
+                    <!-- Like Section -->
+                    <div class="mt-4 pt-4" style="border-top: 2px solid #e2e8f0;">
+                        <button class="btn btn-outline-danger" style="border-radius: 8px;">
+                            <i class="fas fa-heart"></i> Like (0)
+                        </button>
+                        <button class="btn btn-outline-primary ms-2" style="border-radius: 8px;">
+                            <i class="fas fa-share-alt"></i> Share
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comments Section -->
+            <div class="card mt-4" style="border: none; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+                <div class="card-body p-4">
+                    <h4 class="mb-4" style="font-weight: 700; color: #2d3748;">
+                        <i class="fas fa-comments"></i> Comments (0)
+                    </h4>
+
+                    {% if user.is_authenticated %}
+                        <!-- Comment Form -->
+                        <div class="mb-4">
+                            <form method="post" action="#">
+                                {% csrf_token %}
+                                <div class="mb-3">
+                                    <label for="commentInput" class="form-label" style="font-weight: 600; color: #2d3748;">
+                                        Share Your Thoughts
+                                    </label>
+                                    <textarea class="form-control" id="commentInput" rows="4" placeholder="Write your comment here..." style="border-radius: 8px; border: 1px solid #e2e8f0;"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary" style="border-radius: 8px;">
+                                    <i class="fas fa-paper-plane"></i> Post Comment
+                                </button>
+                            </form>
+                        </div>
+                        <hr>
+                    {% else %}
+                        <div class="alert alert-info" style="border-radius: 8px;">
+                            <i class="fas fa-info-circle"></i>
+                            <a href="{% url 'login' %}" style="color: #0c5460; font-weight: 600; text-decoration: none;">Login</a> to leave a comment
+                        </div>
+                    {% endif %}
+
+                    <!-- Comments List -->
+                    <div id="commentsList">
+                        <div class="text-center py-5" style="color: #a0aec0;">
+                            <i class="fas fa-comments fa-3x mb-3" style="opacity: 0.3;"></i>
+                            <p>No comments yet. Be the first to comment!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- About Author -->
+            <div class="card mb-4" style="border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-user-circle fa-4x" style="color: #667eea;"></i>
+                    </div>
+                    <h6 class="card-title" style="font-weight: 700; color: #2d3748;">About Author</h6>
+                    <p class="card-text" style="color: #718096; font-size: 0.95rem;">
+                        <strong>{{ post.author.username }}</strong>
+                    </p>
+                    <p class="card-text" style="color: #a0aec0; font-size: 0.85rem;">
+                        A passionate writer and member of BlogHub community.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Related Posts -->
+            <div class="card" style="border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);">
+                <div class="card-body">
+                    <h6 class="card-title mb-3" style="font-weight: 700; color: #2d3748;">
+                        <i class="fas fa-link"></i> Related Posts
+                    </h6>
+                    <div class="list-group list-group-flush">
+                        <p style="color: #a0aec0; text-align: center; padding: 2rem 0; font-size: 0.9rem;">
+                            More posts coming soon...
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Share Section -->
+            <div class="card mt-4" style="border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);">
+                <div class="card-body">
+                    <h6 class="card-title mb-3" style="font-weight: 700; color: #2d3748;">
+                        <i class="fas fa-share-alt"></i> Share This Post
+                    </h6>
+                    <div class="d-flex gap-2">
+                        <a href="#" class="btn btn-outline-primary btn-sm" style="border-radius: 8px;">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="#" class="btn btn-outline-info btn-sm" style="border-radius: 8px;">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="btn btn-outline-danger btn-sm" style="border-radius: 8px;">
+                            <i class="fab fa-pinterest"></i>
+                        </a>
+                        <a href="#" class="btn btn-outline-secondary btn-sm" style="border-radius: 8px;">
+                            <i class="fas fa-link"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
